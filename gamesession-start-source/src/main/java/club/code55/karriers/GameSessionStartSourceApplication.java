@@ -24,10 +24,10 @@ public class GameSessionStartSourceApplication {
   }
 
   @Bean
-  public Supplier<GameSession> supplyLoan() {
+  public Supplier<GameSession> supplyGameSession() {
     return () -> {
-      GameSession gamesession = new GameSession(UUID.randomUUID().toString(), 0);
-      log.info("${} - {}", gamesession.getUuid(), gamesession.getCurrentTurn());
+      GameSession gamesession = new GameSession(UUID.randomUUID().toString(), 0, 10);
+      log.info("${} - {} / {}", gamesession.getUuid(), gamesession.getCurrentTurn(), gamesession.getMaxTurns());
       return gamesession;
     };
   }

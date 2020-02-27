@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>club.code55.karriers</groupId>
-    <artifactId>gamesession-start</artifactId>
+    <artifactId>next-turn</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>gamesession-start</name>
-    <description>Acts as a handler of GameSessionStart events. Uses Spring Cloud Stream</description>
+    <name>next-turn</name>
+    <description>Acts as a handler of NextTurn events. Uses Spring Cloud Stream</description>
 
     <properties>
         <java.version>8</java.version>

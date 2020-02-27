@@ -23,7 +23,7 @@ public class GameSessionChecker {
 
   @StreamListener(GameSessionProcessor.APPLICATIONS_IN)
   public void loadScenario(GameSession gamesession) {
-    log.info("${} - {}", gamesession.getUuid(), gamesession.getCurrentTurn());
+    log.info("${} - {} / {}", gamesession.getUuid(), gamesession.getCurrentTurn(), gamesession.getMaxTurns());
 
     processor.next_turn().send(message(gamesession));
 

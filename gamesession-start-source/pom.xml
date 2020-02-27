@@ -8,7 +8,7 @@
         <version>2.1.8.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>club.code55.karrieres</groupId>
+    <groupId>club.code55.karriers</groupId>
     <artifactId>gamesession-start-source</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>gamesession-start-source</name>

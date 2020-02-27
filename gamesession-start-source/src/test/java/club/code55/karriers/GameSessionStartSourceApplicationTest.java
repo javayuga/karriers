@@ -12,7 +12,7 @@ public class GameSessionStartSourceApplicationTest {
   @Test
   public void supplyLoan() {
     GameSessionStartSourceApplication app = new GameSessionStartSourceApplication();
-    Supplier<GameSession> gameSessionSupplier = app.supplyLoan();
+    Supplier<GameSession> gameSessionSupplier = app.supplyGameSession();
     assertNotNull(gameSessionSupplier);
     assertNotNull(gameSessionSupplier.get());
     assertNotNull(gameSessionSupplier.get().getUuid());
