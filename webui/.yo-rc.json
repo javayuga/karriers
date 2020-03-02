@@ -38,6 +38,11 @@
     "enableTranslation": true,
     "nativeLanguage": "en",
     "languages": ["en", "pt-br"],
-    "blueprints": []
+    "blueprints": [],
+    "appsFolders": ["webui"],
+    "directoryPath": "../",
+    "monitoring": "no",
+    "consoleOptions": [],
+    "jwtSecretKey": "ZTFkODIxM2Y5MDA3ZjZiYzRkM2JlYjJkZmE0YTNjYTM0YjFmNGUxZTdhNmUxZjc2ZDc0NjU4MGRlYzEwMTljYjk1NTMwNDIyZjFkZjU2Zjc4N2YxZWVlNzc1NjIzODMyMzJmOQ=="
   }
 }

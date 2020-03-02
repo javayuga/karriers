@@ -8,9 +8,9 @@ services:
       - zookeeper
       - kafka
     expose:
-      - 9000
+      - 9090
     ports:
-      - 9000:9000
+      - 9090:9000
     environment:
       ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_BROKERCONNECT: kafka:29092
@@ -66,3 +66,34 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  mysql:
+    build:
+      context: ./webui/src/main/docker/mysql
+      args:
+        - MYSQL_VERSION=latest
+    environment:
+      - MYSQL_DATABASE=karriers_webui
+      - MYSQL_USER=default
+      - MYSQL_PASSWORD=webui
+      - MYSQL_ROOT_PASSWORD=webui
+      - TZ=UTC
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./webui/src/main/docker/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306
+
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: dev_pma
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8183:80

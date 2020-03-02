@@ -1,3 +1,4 @@
 /.idea
 /domain/target/classes
 /domain/target
+/data/mysql

@@ -45,6 +45,12 @@
                         </a>
                     </li>
                     <li>
+                        <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="user" fixedWidth="true"></fa-icon>
+                            <span jhiTranslate="global.menu.admin.phpMyAdmin">phpMyAdmin</span>
+                        </a>
+                    </li>
+                    <li>
                         <a class="dropdown-item" routerLink="admin/tracker" routerLinkActive="active" (click)="collapseNavbar()">
                             <fa-icon icon="eye" fixedWidth="true"></fa-icon>
                             <span jhiTranslate="global.menu.admin.tracker">User tracker</span>

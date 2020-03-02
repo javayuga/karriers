@@ -21,6 +21,7 @@
       "admin": {
         "main": "Administration",
         "userManagement": "User management",
+        "phpMyAdmin": "phpMyAdmin",
         "tracker": "User tracker",
         "metrics": "Metrics",
         "health": "Health",
