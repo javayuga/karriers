@@ -1,20 +1,14 @@
 package club.code55.web.rest;
 
 import club.code55.config.KafkaProperties;
-/**
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
- **/
+import club.code55.kafka.GameSessionStartProducer;
+import club.code55.karriers.domain.v1.GameSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +17,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import club.code55.karriers.domain.v1.GameSession;
+/**
+ * import org.apache.kafka.clients.consumer.ConsumerRecord;
+ * import org.apache.kafka.clients.consumer.ConsumerRecords;
+ * import org.apache.kafka.clients.consumer.KafkaConsumer;
+ * import org.apache.kafka.clients.producer.KafkaProducer;
+ * import org.apache.kafka.clients.producer.ProducerRecord;
+ * import org.apache.kafka.clients.producer.RecordMetadata;
+ **/
+
 
 @RestController
 @RequestMapping("/api/webui-kafka")
@@ -35,6 +37,12 @@ public class WebuiKafkaResource {
     //private KafkaProducer<String, String> producer;
     private ExecutorService sseExecutorService = Executors.newCachedThreadPool();
     //private KafkaProducer<String, GameSession> gameSessionKafkaProducer;
+
+    @Autowired
+    private GameSessionStartProducer producer;
+
+    @Autowired
+    private GameSessionStartProducer gameSessionStartProducer;
 
 
     public WebuiKafkaResource(KafkaProperties kafkaProperties) {
@@ -56,9 +64,10 @@ public class WebuiKafkaResource {
 
         GameSession gamesession = new GameSession(UUID.randomUUID().toString(), 0, 10);
 
+        producer.sendGameSessionStartMessage(gamesession);
 //        RecordMetadata metadata = gameSessionKafkaProducer.send(new ProducerRecord<>("output", gamesession.getUuid(), gamesession)).get();
 //        return new PublishResult(metadata.topic(), metadata.partition(), metadata.offset(), Instant.ofEpochMilli(metadata.timestamp()));
-        return new PublishResult("",0,0, Instant.now());
+        return new PublishResult("output",0,0, Instant.now());
     }
 
 

@@ -43,7 +43,7 @@
         <jhipster-dependencies.version>3.4.0</jhipster-dependencies.version>
         <!-- The spring-boot version should match the one managed by
         https://mvnrepository.com/artifact/io.github.jhipster/jhipster-dependencies/${jhipster-dependencies.version} -->
-        <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
+        <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
         <!-- The spring framework version should match the one managed by
         https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
         <spring.version>5.2.3.RELEASE</spring.version>
@@ -95,7 +95,6 @@
         <!-- jhipster-needle-maven-property -->
 
         <karriers-domain.version>0.0.1-SNAPSHOT</karriers-domain.version>
-        <spring-kafka.version>2.1.4.RELEASE</spring-kafka.version>
     </properties>
 
     <dependencyManagement>
@@ -117,6 +116,22 @@
             <artifactId>domain</artifactId>
             <version>${karriers-domain.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-streams</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
 
         <dependency>
             <groupId>io.github.jhipster</groupId>

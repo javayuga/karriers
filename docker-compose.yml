@@ -78,9 +78,6 @@ services:
       - MYSQL_PASSWORD=webui
       - MYSQL_ROOT_PASSWORD=webui
       - TZ=UTC
-    volumes:
-      - ./data/mysql:/var/lib/mysql
-      - ./webui/src/main/docker/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     ports:
       - 3306:3306
 
