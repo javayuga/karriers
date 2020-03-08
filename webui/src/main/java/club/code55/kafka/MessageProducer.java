@@ -16,7 +16,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 @Component
 public class MessageProducer {
 
-    private final Logger log = LoggerFactory.getLogger(WebuiKafkaResource.class);
+    private final Logger log = LoggerFactory.getLogger(MessageProducer.class);
 
     @Autowired
     private KafkaTemplate<String, GameSession> gameSessionKafkaTemplate;
