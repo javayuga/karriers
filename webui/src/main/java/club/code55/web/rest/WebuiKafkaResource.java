@@ -1,12 +1,14 @@
 package club.code55.web.rest;
 
 import club.code55.config.KafkaProperties;
+/**
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+ **/
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -30,21 +32,22 @@ public class WebuiKafkaResource {
     private final Logger log = LoggerFactory.getLogger(WebuiKafkaResource.class);
 
     private final KafkaProperties kafkaProperties;
-    private KafkaProducer<String, String> producer;
+    //private KafkaProducer<String, String> producer;
     private ExecutorService sseExecutorService = Executors.newCachedThreadPool();
-    private KafkaProducer<String, GameSession> gameSessionKafkaProducer;
+    //private KafkaProducer<String, GameSession> gameSessionKafkaProducer;
 
 
     public WebuiKafkaResource(KafkaProperties kafkaProperties) {
         this.kafkaProperties = kafkaProperties;
-        this.producer = new KafkaProducer<>(kafkaProperties.getProducerProps());
+        //this.producer = new KafkaProducer<>(kafkaProperties.getProducerProps());
     }
 
     @PostMapping("/publish/{topic}")
     public PublishResult publish(@PathVariable String topic, @RequestParam String message, @RequestParam(required = false) String key) throws ExecutionException, InterruptedException {
         log.debug("REST request to send to Kafka topic {} with key {} the message : {}", topic, key, message);
-        RecordMetadata metadata = producer.send(new ProducerRecord<>(topic, key, message)).get();
-        return new PublishResult(metadata.topic(), metadata.partition(), metadata.offset(), Instant.ofEpochMilli(metadata.timestamp()));
+        //RecordMetadata metadata = producer.send(new ProducerRecord<>(topic, key, message)).get();
+        //return new PublishResult(metadata.topic(), metadata.partition(), metadata.offset(), Instant.ofEpochMilli(metadata.timestamp()));
+        return new PublishResult("",0,0, Instant.now());
     }
 
     @GetMapping("/startGameSession")
@@ -53,8 +56,9 @@ public class WebuiKafkaResource {
 
         GameSession gamesession = new GameSession(UUID.randomUUID().toString(), 0, 10);
 
-        RecordMetadata metadata = gameSessionKafkaProducer.send(new ProducerRecord<>("output", gamesession.getUuid(), gamesession)).get();
-        return new PublishResult(metadata.topic(), metadata.partition(), metadata.offset(), Instant.ofEpochMilli(metadata.timestamp()));
+//        RecordMetadata metadata = gameSessionKafkaProducer.send(new ProducerRecord<>("output", gamesession.getUuid(), gamesession)).get();
+//        return new PublishResult(metadata.topic(), metadata.partition(), metadata.offset(), Instant.ofEpochMilli(metadata.timestamp()));
+        return new PublishResult("",0,0, Instant.now());
     }
 
 
@@ -67,16 +71,16 @@ public class WebuiKafkaResource {
 
         SseEmitter emitter = new SseEmitter(0L);
         sseExecutorService.execute(() -> {
-            KafkaConsumer<String, String> consumer = new KafkaConsumer<>(consumerProps);
-            emitter.onCompletion(consumer::close);
-            consumer.subscribe(topics);
+//            KafkaConsumer<String, String> consumer = new KafkaConsumer<>(consumerProps);
+//            emitter.onCompletion(consumer::close);
+//            consumer.subscribe(topics);
             boolean exitLoop = false;
             while(!exitLoop) {
                 try {
-                    ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
-                    for (ConsumerRecord<String, String> record : records) {
-                        emitter.send(record.value());
-                    }
+//                    ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
+//                    for (ConsumerRecord<String, String> record : records) {
+//                        emitter.send(record.value());
+//                    }
                     emitter.send(SseEmitter.event().comment(""));
                 } catch (Exception ex) {
                     log.trace("Complete with error {}", ex.getMessage(), ex);
@@ -84,7 +88,7 @@ public class WebuiKafkaResource {
                     exitLoop = true;
                 }
             }
-            consumer.close();
+//            consumer.close();
             emitter.complete();
         });
         return emitter;
