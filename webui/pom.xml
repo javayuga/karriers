@@ -93,6 +93,9 @@
         <junit.utReportFolder>${project.testresult.directory}/test</junit.utReportFolder>
         <junit.itReportFolder>${project.testresult.directory}/integrationTest</junit.itReportFolder>
         <!-- jhipster-needle-maven-property -->
+
+        <karriers-domain.version>0.0.1-SNAPSHOT</karriers-domain.version>
+        <spring-kafka.version>2.1.4.RELEASE</spring-kafka.version>
     </properties>
 
     <dependencyManagement>
@@ -109,6 +112,12 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>club.code55.karriers</groupId>
+            <artifactId>domain</artifactId>
+            <version>${karriers-domain.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>io.github.jhipster</groupId>
             <artifactId>jhipster-framework</artifactId>

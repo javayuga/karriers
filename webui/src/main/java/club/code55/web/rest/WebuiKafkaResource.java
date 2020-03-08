@@ -16,9 +16,12 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import club.code55.karriers.domain.v1.GameSession;
 
 @RestController
 @RequestMapping("/api/webui-kafka")
@@ -29,6 +32,8 @@ public class WebuiKafkaResource {
     private final KafkaProperties kafkaProperties;
     private KafkaProducer<String, String> producer;
     private ExecutorService sseExecutorService = Executors.newCachedThreadPool();
+    private KafkaProducer<String, GameSession> gameSessionKafkaProducer;
+
 
     public WebuiKafkaResource(KafkaProperties kafkaProperties) {
         this.kafkaProperties = kafkaProperties;
@@ -41,6 +46,17 @@ public class WebuiKafkaResource {
         RecordMetadata metadata = producer.send(new ProducerRecord<>(topic, key, message)).get();
         return new PublishResult(metadata.topic(), metadata.partition(), metadata.offset(), Instant.ofEpochMilli(metadata.timestamp()));
     }
+
+    @GetMapping("/startGameSession")
+    public PublishResult startGameSession()  throws ExecutionException, InterruptedException {
+        log.debug("REST request to start a game session");
+
+        GameSession gamesession = new GameSession(UUID.randomUUID().toString(), 0, 10);
+
+        RecordMetadata metadata = gameSessionKafkaProducer.send(new ProducerRecord<>("output", gamesession.getUuid(), gamesession)).get();
+        return new PublishResult(metadata.topic(), metadata.partition(), metadata.offset(), Instant.ofEpochMilli(metadata.timestamp()));
+    }
+
 
     @GetMapping("/consume")
     public SseEmitter consume(@RequestParam("topic") List<String> topics, @RequestParam Map<String, String> consumerParams) {
