@@ -1,7 +1,7 @@
 package club.code55.web.rest;
 
 import club.code55.config.KafkaProperties;
-import club.code55.kafka.GameSessionStartProducer;
+import club.code55.kafka.MessageProducer;
 import club.code55.karriers.domain.v1.GameSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,16 +34,10 @@ public class WebuiKafkaResource {
     private final Logger log = LoggerFactory.getLogger(WebuiKafkaResource.class);
 
     private final KafkaProperties kafkaProperties;
-    //private KafkaProducer<String, String> producer;
     private ExecutorService sseExecutorService = Executors.newCachedThreadPool();
-    //private KafkaProducer<String, GameSession> gameSessionKafkaProducer;
 
     @Autowired
-    private GameSessionStartProducer producer;
-
-    @Autowired
-    private GameSessionStartProducer gameSessionStartProducer;
-
+    private MessageProducer producer;
 
     public WebuiKafkaResource(KafkaProperties kafkaProperties) {
         this.kafkaProperties = kafkaProperties;
@@ -53,9 +47,9 @@ public class WebuiKafkaResource {
     @PostMapping("/publish/{topic}")
     public PublishResult publish(@PathVariable String topic, @RequestParam String message, @RequestParam(required = false) String key) throws ExecutionException, InterruptedException {
         log.debug("REST request to send to Kafka topic {} with key {} the message : {}", topic, key, message);
-        //RecordMetadata metadata = producer.send(new ProducerRecord<>(topic, key, message)).get();
-        //return new PublishResult(metadata.topic(), metadata.partition(), metadata.offset(), Instant.ofEpochMilli(metadata.timestamp()));
-        return new PublishResult("",0,0, Instant.now());
+
+        producer.sendStringMessageToTopic(topic, key, message);
+        return new PublishResult(topic,0,0, Instant.now());
     }
 
     @GetMapping("/startGameSession")
@@ -65,8 +59,6 @@ public class WebuiKafkaResource {
         GameSession gamesession = new GameSession(UUID.randomUUID().toString(), 0, 10);
 
         producer.sendGameSessionStartMessage(gamesession);
-//        RecordMetadata metadata = gameSessionKafkaProducer.send(new ProducerRecord<>("output", gamesession.getUuid(), gamesession)).get();
-//        return new PublishResult(metadata.topic(), metadata.partition(), metadata.offset(), Instant.ofEpochMilli(metadata.timestamp()));
         return new PublishResult("output",0,0, Instant.now());
     }
 
