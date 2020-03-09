@@ -3,13 +3,18 @@ package club.code55.web.rest;
 import club.code55.config.KafkaProperties;
 import club.code55.kafka.MessageProducer;
 import club.code55.karriers.domain.v1.GameSession;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -64,24 +69,23 @@ public class WebuiKafkaResource {
 
 
     @GetMapping("/consume")
-    public SseEmitter consume(@RequestParam("topic") List<String> topics, @RequestParam Map<String, String> consumerParams) {
+    public SseEmitter consume(@RequestParam(required=false) List<String> topics, @RequestParam(required = false) Map<String, String> consumerParams) {
         log.debug("REST request to consume records from Kafka topics {}", topics);
         Map<String, Object> consumerProps = kafkaProperties.getConsumerProps();
         consumerProps.putAll(consumerParams);
-        consumerProps.remove("topic");
 
         SseEmitter emitter = new SseEmitter(0L);
         sseExecutorService.execute(() -> {
-//            KafkaConsumer<String, String> consumer = new KafkaConsumer<>(consumerProps);
-//            emitter.onCompletion(consumer::close);
-//            consumer.subscribe(topics);
+            KafkaConsumer<String, String> consumer = new KafkaConsumer<>(consumerProps);
+            emitter.onCompletion(consumer::close);
+            consumer.subscribe(Arrays.asList("foo"));
             boolean exitLoop = false;
             while(!exitLoop) {
                 try {
-//                    ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
-//                    for (ConsumerRecord<String, String> record : records) {
-//                        emitter.send(record.value());
-//                    }
+                    ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
+                    for (ConsumerRecord<String, String> record : records) {
+                        emitter.send(record.value());
+                    }
                     emitter.send(SseEmitter.event().comment(""));
                 } catch (Exception ex) {
                     log.trace("Complete with error {}", ex.getMessage(), ex);
@@ -89,7 +93,7 @@ public class WebuiKafkaResource {
                     exitLoop = true;
                 }
             }
-//            consumer.close();
+            consumer.close();
             emitter.complete();
         });
         return emitter;

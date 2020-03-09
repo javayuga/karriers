@@ -1,6 +1,7 @@
 package club.code55;
 
 import club.code55.config.ApplicationProperties;
+import club.code55.config.KafkaProperties;
 import io.github.jhipster.config.DefaultProfileUtil;
 import io.github.jhipster.config.JHipsterConstants;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @SpringBootApplication
-@EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
+@EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class, KafkaProperties.class})
 public class WebuiApp {
 
     private static final Logger log = LoggerFactory.getLogger(WebuiApp.class);

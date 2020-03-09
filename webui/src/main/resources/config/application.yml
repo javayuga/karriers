@@ -150,6 +150,13 @@ kafka:
   gameSessionStart:
     topic:
       name: output
+    consumer:
+      bootstrap.servers: localhost:9092
+      topic: foo
+      group.id: group_id
+      auto.offset.reset: earliest
+      key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value.deserializer: org.apache.kafka.common.serialization.StringDeserializer
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
